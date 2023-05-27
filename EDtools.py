@@ -742,27 +742,27 @@ def tocoolist(sparmatrix):
     return res, tmp.shape[0]
 
 
-def convert2qu(H):
-    import quimb as _qu
+# def convert2qu(H):
+#     import quimb as _qu
 
-    @_qu.gen.operators.hamiltonian_builder
-    def cvt2csr(x):
-        try:
-            return x.tocsr()
-        except:
-            return _sparse.csr_matrix(x)
+#     @_qu.gen.operators.hamiltonian_builder
+#     def cvt2csr(x):
+#         try:
+#             return x.tocsr()
+#         except:
+#             return _sparse.csr_matrix(x)
 
-    return cvt2csr(H)
+#     return cvt2csr(H)
 
 
-def eig(H, backend="scipy", **kwarg):
+def eig(H, backend="numpy", **kwarg):
     """一般矩阵本征值分解"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.eig(quH, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.eig(quH, **kwarg)
+    if backend == "scipy":
         return _la.eig(H.toarray(), **kwarg)
     elif backend == "numpy":
         return _np.linalg.eig(H.toarray(), **kwarg)
@@ -772,12 +772,12 @@ def eig(H, backend="scipy", **kwarg):
 
 def eigh(H, backend="numpy", **kwarg):
     """厄密矩阵本征值分解"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.eigh(quH, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.eigh(quH, **kwarg)
+    if backend == "scipy":
         return _la.eigh(H.toarray(), **kwarg)
     elif backend == "numpy":
         return _np.linalg.eigh(H.toarray(), **kwarg)
@@ -785,14 +785,14 @@ def eigh(H, backend="numpy", **kwarg):
         raise NotImplemented(backend)
 
 
-def eigvals(H, backend="scipy", **kwarg):
+def eigvals(H, backend="numpy", **kwarg):
     """一般矩阵本征值分解，但只求本征值"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.eigvals(quH, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.eigvals(quH, **kwarg)
+    if backend == "scipy":
         return _la.eigvals(H.toarray(), **kwarg)
     elif backend == "numpy":
         return _np.linalg.eigvals(H.toarray(), **kwarg)
@@ -802,12 +802,12 @@ def eigvals(H, backend="scipy", **kwarg):
 
 def eigvalsh(H, backend="numpy", **kwarg):
     """厄密矩阵本征值分解，但只求本征值"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.eigvalsh(quH, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.eigvalsh(quH, **kwarg)
+    if backend == "scipy":
         return _la.eigvalsh(H.toarray(), **kwarg)
     elif backend == "numpy":
         return _np.linalg.eigvalsh(H.toarray(), **kwarg)
@@ -815,14 +815,14 @@ def eigvalsh(H, backend="numpy", **kwarg):
         raise NotImplemented(backend)
 
 
-def svd(H, backend="scipy", **kwarg):
+def svd(H, backend="numpy", **kwarg):
     """一般矩阵奇异值分解"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.svd(quH, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.svd(quH, **kwarg)
+    if backend == "scipy":
         return _la.svd(H.toarray(), **kwarg)
     elif backend == "numpy":
         return _np.linalg.svd(H.toarray(), **kwarg)
@@ -832,12 +832,12 @@ def svd(H, backend="scipy", **kwarg):
 
 def eigs(H, k, backend="scipy", **kwarg):
     """一般矩阵 lanczos"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.eig(quH, k, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.eig(quH, k, **kwarg)
+    if backend == "scipy":
         assert _sparse.issparse(H)
         return _sla.eigs(H, k, **kwarg)
     else:
@@ -846,12 +846,12 @@ def eigs(H, k, backend="scipy", **kwarg):
 
 def eigsh(H, k, backend="scipy", **kwarg):
     """厄密矩阵 lanczos"""
-    if backend == "quimb":
-        import quimb as _qu
+    # if backend == "quimb":
+    #     import quimb as _qu
 
-        quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-        return _qu.eigh(quH, k, **kwarg)
-    elif backend == "scipy":
+    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
+    #     return _qu.eigh(quH, k, **kwarg)
+    if backend == "scipy":
         assert _sparse.issparse(H)
         return _sla.eigsh(H, k, **kwarg)
     else:

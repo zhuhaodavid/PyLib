@@ -770,7 +770,7 @@ def eig(H, backend="scipy", **kwarg):
         raise NotImplemented(backend)
 
 
-def eigh(H, backend="scipy", **kwarg):
+def eigh(H, backend="numpy", **kwarg):
     """厄密矩阵本征值分解"""
     if backend == "quimb":
         import quimb as _qu
@@ -800,7 +800,7 @@ def eigvals(H, backend="scipy", **kwarg):
         raise NotImplemented(backend)
 
 
-def eigvalsh(H, backend="scipy", **kwarg):
+def eigvalsh(H, backend="numpy", **kwarg):
     """厄密矩阵本征值分解，但只求本征值"""
     if backend == "quimb":
         import quimb as _qu

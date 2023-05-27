@@ -37,7 +37,7 @@ def set_axis(ax, xlim, ylim, xlabel, ylabel):
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     # ax.legend()  # 显示 legend
-    plt.tight_layout()
+    # plt.tight_layout()
     # ax.set_xticks([-3, -2, -1, 0, 1, 2, 3], [-3, -2, -1, 0, 1, 2, 3], fontsize=30)  # 该 x 方向 tick
     # ax.set_yticks([-3, -2, -1, 0, 1, 2, 3], [-3, -2, -1, 0, 1, 2, 3], fontsize=30)  # 该 y 方向 tick
     # ax.tick_params(axis="both", which="both", direction='in')  # 选择齿方向 "in"/"out" which 可填 "major"/"minor"
@@ -57,7 +57,7 @@ def find_boundary(x, y, zdata, a, clf=None, axes=None):
     # 支持向量机线性分类
     clf = sklearn.svm.SVC(kernel="linear", C=0.025)
     # 支持向量机分类
-    clf = sklearn.gaussian_process.SVC(gamma=2, C=1)
+    clf = sklearn.svm.SVC(gamma=2, C=1)
     # 决策树分类
     clf = sklearn.tree.DecisionTreeClassifier(max_depth=5)
     # MLPC 分类
@@ -90,18 +90,16 @@ def find_boundary(x, y, zdata, a, clf=None, axes=None):
     pts = np.array([[i, j] for i in x for j in y])
     vls = np.array([zdata[j, i] for i in range(len(x)) for j in range(len(y))]) < a
     if clf is None:
-        from sklearn.gaussian_process import GaussianProcessClassifier
-        from sklearn.gaussian_process.kernels import RBF
-
-        clf = GaussianProcessClassifier(1.0 * RBF(1.0))
+        from sklearn.svm import SVC
+        clf = SVC(gamma='scale', C=10)
     clf.fit(pts, vls)
     pre_y = clf.predict(pts)
     accuracy = accuracy_score(vls, pre_y)
     print(f"classify accuracy: {accuracy:0.2f}")
     if axes is None:
         axes = [x.min(), x.max(), y.min(), y.max()]
-    x0s = np.linspace(axes[0], axes[1], 200)
-    x1s = np.linspace(axes[2], axes[3], 200)
+    x0s = np.linspace(axes[0], axes[1], 800)
+    x1s = np.linspace(axes[2], axes[3], 800)
     x0, x1 = np.meshgrid(x0s, x1s)
     X = np.c_[x0.ravel(), x1.ravel()]
     y_pred = clf.predict(X)
@@ -388,7 +386,7 @@ def addColorBar(
         caxpos = mpl.transforms.Bbox.from_extents(x1, y1, x2, y2)
         cax = axes.figure.add_axes(caxpos)
         cbar = fig.colorbar(
-            mappable, cax=cax, orientation=orientation, location=location
+            mappable, cax=cax, orientation=orientation
         )
     cbar.minorticks_off()
     if ticks is not None:

@@ -757,7 +757,7 @@ def ham_ZZ_linear(L, theta=1.0):
         ]
     return Oper(static, ["s"])
 
-def BdG_freefermion(L, jxx=1.0, jyy=1.0, hz=0.0, jxy=0.0, jyx=0.0, cyclic=False, reduce=False):
+def ham_BdG_freefermion(L, jxx=1.0, jyy=1.0, hz=0.0, jxy=0.0, jyx=0.0, cyclic=False, reduce=False):
     """返回自由费米子对应的自旋模型的 BdG 哈密顿量
     只有 cyclic 是 False 的时候，才与自旋模型对应。
     jxy, jyx 为 0 时，BdG 可以化简，reduce 控制是否自动简化。
@@ -910,11 +910,11 @@ def pauli_oper(stri):
 ######################################
 
 
-def gdenergy_XY_infinite(jx=1.0, jy=1.0, jxy=0.0, jyx=0.0, hz=0.0):
+def gdenergy_XY_infinite(jxx=1.0, jyy=1.0, jxy=0.0, jyx=0.0, hz=0.0):
     from scipy.integrate import quad
 
-    lamb = (jx + jy) / 4 + 1j * (jxy - jyx) / 2
-    gamma = (jx - jy) / 4 + 1j * (jxy + jyx) / 2
+    lamb = (jxx + jyy) / 4 + 1j * (jxy - jyx) / 2
+    gamma = (jxx - jyy) / 4 + 1j * (jxy + jyx) / 2
     h = hz / 2
     return quad(
         lambda x: -_np.sqrt(
@@ -925,7 +925,51 @@ def gdenergy_XY_infinite(jx=1.0, jy=1.0, jxy=0.0, jyx=0.0, hz=0.0):
         1,
     )[0]
 
+def gdenergy_XY(L, jxx=1.0, jyy=1.0, jxy=0.0, jyx=0.0, hz=0.0):
+    H = ham_BdG_freefermion(L, jxx=jxx, jyy=jyy, jxy=jxy, jyx=jyx, hz=hz, reduce=True, cyclic=False)
+    eigvalue = eigvalsh(H)
+    if len(eigvalue) == L:
+        return -_np.sum(_np.sqrt(_np.abs(eigvalue)))
+    else:
+        return _np.sum(eigvalue[:L])
 
+def energies_XY(L, jxx=1.0, jyy=1.0, jxy=0.0, jyx=0.0, hz=0.0):
+    import numpy as _np
+    H = ham_BdG_freefermion(L, jxx=jxx, jyy=jyy, jxy=jxy, jyx=jyx, hz=hz, reduce=True, cyclic=False)
+    eigvalue = eigvalsh(H)
+    if len(eigvalue) == L:
+        tmp = _np.sqrt(_np.abs(eigvalue))
+        gdeng = -_np.sum(_np.sqrt(_np.abs(eigvalue)))
+    else:
+        tmp = eigvalue[L:]
+        gdeng = -_np.sum(tmp)
+    # res = [gdeng]
+    # import itertools
+    # for i in range(L):
+    #     for indx in itertools.combinations(tmp, i):
+    #         res.append(gdeng + _np.sum(indx))
+    # return _np.sort(res)
+    return _np.sort(_get_full_sprem(gdeng, tmp, L))
+
+from numba import njit, prange
+@njit
+def _get_full_sprem(gdeng, tmp, L):
+    res = []
+    for i in prange(2**L):
+        res.append(gdeng + 2*_np.sum(tmp[_decimal(i, L)==1]))
+    return res
+
+@njit
+def _decimal(num, L):
+    arry = _np.zeros(L, dtype=_np.int32)
+    for j in range(L):
+        arry[j] = num % 2
+        num = num // 2  
+        if num == 0:  
+            break
+    return arry
+
+    
 def gdenergy_heisenberg_pbc_approx(L):
     """Get the analytic isotropic heisenberg chain ground energy for length L.
     Useful for testing. Assumes the heisenberg model is defined with spin

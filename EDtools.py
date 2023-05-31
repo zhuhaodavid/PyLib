@@ -1171,6 +1171,41 @@ def exp_action_on(
     else:
         raise NotImplemented(method)
 
+def BdG_clist(ev, L):
+    ev = ev.conj().T
+    import multiprocessing as mp
+    clist = []
+    for i in range(L):
+        ci = [["z"*ind+"+", [[ev[i, ind]]+list(range(ind+1))]] for ind in range(L)] + [["z"*ind+"-", [[ev[i, ind+L]]+list(range(ind+1))]] for ind in range(L)]
+        ci = hamiltonian(ci,[],L,spin_basis_1d(L,pauli=-1),dtype=ev.dtype,check_herm=False,check_pcon=False,check_symm=False)
+        clist.append(ci)
+    # from quspin.operators import quantum_operator
+    # operator_dict = dict()
+    # for ind in range(L):
+    #     operator_dict[str(ind)] = [["z"*ind+"+", [[1]+list(range(ind+1))]]]
+    #     operator_dict[str(ind+L)] = [["z"*ind+"-", [[1]+list(range(ind+1))]]]
+    # H = quantum_operator(operator_dict,basis=spin_basis_1d(L,pauli=-1), check_herm=False,check_pcon=False,check_symm=False)
+    # params_dict = lambda i: {str(j):ev[i,j] for j in range(2*L)}
+    # pool = mp.Pool(processes=mp.cpu_count())
+    # for i in range(L):
+    #     pool.apply(H.tohamiltonian, (params_dict(i)), callback=clist.append)
+    # pool.close()
+    # pool.join()
+    return clist
+
+def BdG_gd_state(ev, L):
+    assert ev.shape == (2*L, 2*L)
+    ini = _np.zeros(2**L)
+    ini[-1] = 1
+    clist = BdG_clist(ev, L)
+    for ci in clist:
+        output = ci.dot(ini)
+        nm = _la.norm(output)
+        if _np.isclose(nm, 0):
+            continue
+        else:
+            ini = output / nm
+    return ini
 
 #################################################
 #  生成态

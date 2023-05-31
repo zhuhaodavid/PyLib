@@ -1165,8 +1165,6 @@ def exp_action_on(
             v_lanczos_iter = expm_lanczos(E, V, Q_T, a=a)
         return v_lanczos_iter
     elif method == "exact":
-        if operator is None:
-            raise Exception("没有 get_matrix")
         return _sla.expm_multiply(operator.tocsr(), v)
     else:
         raise NotImplemented(method)

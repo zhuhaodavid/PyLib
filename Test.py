@@ -123,9 +123,9 @@ if __name__ == "__main__":
     H.show_oper()
 
     H = sum(
-        XX(i, (i + 1) % L) + YY(i, (i + 1) % L) + ZZ(i, (i + 1) % L)
+        xx(i, (i + 1) % L) + yy(i, (i + 1) % L) + zz(i, (i + 1) % L)
         for i in range(L - 1)
-    ) + Z(1)
+    ) + z(1)
     H.get_matrix(basis)
     H.show()
 
@@ -142,9 +142,9 @@ if __name__ == "__main__":
     H = Oper(static, ["f"])
     H.show()
     H = sum(
-        PM_f(i, (i + 1) % L) + MP_f(i, (i + 1) % L) + NN_f(i, (i + 1) % L)
+        pm_f(i, (i + 1) % L) + mp_f(i, (i + 1) % L) + nn_f(i, (i + 1) % L)
         for i in range(L - 1)
-    ) + Z_f(1)
+    ) + z_f(1)
     H.show()
 
     # """ Example 14 """  # for oper repre
@@ -160,23 +160,23 @@ if __name__ == "__main__":
     H = Oper(static, ["b"])
     H.show()
     H = sum(
-        MP_b(i, (i + 1) % L) + PM_b(i, (i + 1) % L) + NN_b(i, (i + 1) % L)
+        mp_b(i, (i + 1) % L) + pm_b(i, (i + 1) % L) + nn_b(i, (i + 1) % L)
         for i in range(L - 1)
-    ) + N_b(1)
+    ) + n_b(1)
     H.show()
 
     """ Example 15 """  # for oper repre
     print("===========================")
     print("Example 15")
-    H = 1 / 2 * Z(0) + N_b(0) + ((SP(0) + SM(0)) @ (B(0) + Bdag(0)))  # Rabi
+    H = 1 / 2 * z(0) + n_b(0) + ((sp(0) + sm(0)) @ (b(0) + bdag(0)))  # Rabi
     H.show()
-    H = 1 / 2 * Z(0) + N_b(0) + 0.1 * SP(0) @ B(0) + 0.1 * SM(0) @ Bdag(0)  # J-C
+    H = 1 / 2 * z(0) + n_b(0) + 0.1 * sp(0) @ b(0) + 0.1 * sm(0) @ bdag(0)  # J-C
     H.show()
 
     """ Example 16 """  # for oper action
     print("===========================")
     print("Example 16")
-    H = MP(1, 0) + PM(0, 1) + ZZ(1, 0) + 4 * Z(1) + 7 * SP(1) + 4 * SM(1)  # type: Oper
+    H = mp(1, 0) + pm(0, 1) + zz(1, 0) + 4 * z(1) + 7 * sp(1) + 4 * sm(1)  # type: Oper
     H.show()
     sb = spin_basis_1d(2)
     s1 = to_vector(sb, ["01", "10"], [0.1, 0.3])
@@ -196,12 +196,12 @@ if __name__ == "__main__":
     print("===========================")
     print("Example 17")
     H = (
-        2 * PM_b(0, 1)
-        + 2 * MP_b(0, 1)
-        + 4 * NN_b(0, 1)
-        + 4 * N_b(1)
-        + 7 * Bdag(1)
-        + 4 * B(0)
+        2 * pm_b(0, 1)
+        + 2 * mp_b(0, 1)
+        + 4 * nn_b(0, 1)
+        + 4 * n_b(1)
+        + 7 * bdag(1)
+        + 4 * b(0)
     )  # type: Oper
     H.show_oper()
     sb = boson_basis_1d(2, sps=4)
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     from PyLib import *
 
-    H = SP(0) @ B(0) + SM(0) @ Bdag(0)
+    H = sp(0) @ b(0) + sm(0) @ bdag(0)
     print(H.static)
     sb = spin_basis_1d(1)
     bb = boson_basis_1d(1, sps=3)
@@ -237,10 +237,10 @@ if __name__ == "__main__":
     print("Example 19")
     site_num = 3
     H = (
-        sum(MP(i, i + 1) + PM(i + 1, i) + ZZ(i, i + 1) for i in range(site_num - 1))
-        + MP(0, site_num - 1)
-        + MP(site_num - 1, 0)
-        + ZZ(0, site_num - 1)
+        sum(mp(i, i + 1) + pm(i + 1, i) + zz(i, i + 1) for i in range(site_num - 1))
+        + mp(0, site_num - 1)
+        + mp(site_num - 1, 0)
+        + zz(0, site_num - 1)
     )
     H.show_oper()
     sb = spin_basis_1d(site_num)
@@ -262,9 +262,9 @@ if __name__ == "__main__":
     H.show_oper()
     # """第二种方法"""
     H = (
-        sum(PM_b(i, i + 1) + PM_b(i + 1, i) for i in range(mode_num - 1))
-        + PM_b(mode_num - 1, 0)
-        + PM_b(0, mode_num - 1)
+        sum(pm_b(i, i + 1) + pm_b(i + 1, i) for i in range(mode_num - 1))
+        + pm_b(mode_num - 1, 0)
+        + pm_b(0, mode_num - 1)
     )
     H.show_oper()
     sb = boson_basis_1d(mode_num, sps=cut_off)
@@ -295,7 +295,7 @@ if __name__ == "__main__":
     #     """ Example 22 """
     #     print("===========================")
     print("Example 22")
-    H = N_b(0) + N(0) + 0.1 * B(0) @ SP(0) + 0.1 * Bdag(0) @ SM(0)  # J-C
+    H = n_b(0) + n(0) + 0.1 * b(0) @ sp(0) + 0.1 * bdag(0) @ sm(0)  # J-C
     H.show_oper()
     sb = spin_basis_1d(1, pauli=0)
     bb = boson_basis_1d(1, sps=4)
@@ -307,7 +307,7 @@ if __name__ == "__main__":
     """ Example 23 """
     print("===========================")
     print("Example 23")
-    H = N_b(0) + N(0) + 0.1 * B(0) @ SP(0) + 0.1 * Bdag(0) @ SM(0)  # J-C
+    H = n_b(0) + n(0) + 0.1 * b(0) @ sp(0) + 0.1 * bdag(0) @ sm(0)  # J-C
     H.show_oper()
     sb = spin_basis_1d(1, pauli=-1)
     bb = boson_basis_1d(1, sps=4)
@@ -326,10 +326,10 @@ if __name__ == "__main__":
     print("Example 24")
     site_num = 10
     H = (
-        sum(MP(i, i + 1) + PM(i, i + 1) + ZZ(i, i + 1) for i in range(site_num - 1))
-        + MP(0, site_num - 1)
-        + PM(site_num - 1, 0)
-        + ZZ(0, site_num - 1)
+        sum(mp(i, i + 1) + pm(i, i + 1) + zz(i, i + 1) for i in range(site_num - 1))
+        + mp(0, site_num - 1)
+        + pm(site_num - 1, 0)
+        + zz(0, site_num - 1)
     )
     H.show_oper()
     H.get_matrix(s_par=site_num)
@@ -342,21 +342,21 @@ if __name__ == "__main__":
     site_num = 3
     H = (
         sum(
-            PM_f(i, i + 1) + PM_f(i + 1, i) + ZZ_f(i, i + 1)
+            pm_f(i, i + 1) + pm_f(i + 1, i) + zz_f(i, i + 1)
             for i in range(site_num - 1)
         )
-        + PM_f(0, site_num - 1)
-        + PM_f(site_num - 1, 0)
-        + ZZ_f(0, site_num - 1)
+        + pm_f(0, site_num - 1)
+        + pm_f(site_num - 1, 0)
+        + zz_f(0, site_num - 1)
     )
     H.show_oper()
     H.get_matrix(f_par=[site_num], pauli=0)  # 这个是 JW 变换 之后的矩阵
-    el, ev = eigh(H1, backend="quimb")
+    el, ev = eigh(H1)
     show_eig(H.basis, el, ev)
 
     sb = spinless_fermion_basis_1d(site_num)
     H2 = H.get_matrix(sb)  # 这个是在自然基上写的 我这里的自然基是指按 ...fdag_i...fdag_j |0> 中 i<j 排列的
-    el, ev = eigh(H1, backend="quimb")
+    el, ev = eigh(H1)
     show_eig(H.basis, el, ev)
 
     """ Example 27 """
@@ -371,7 +371,7 @@ if __name__ == "__main__":
     """ Example 33 """
     print("===========================")
     print("Example 33")
-    H1 = XX(0, 1)
+    H1 = xx(0, 1)
     H1.basis = spin_basis_1d(L=2)
     H1.show()
     H1.expand().show()
@@ -384,3 +384,6 @@ if __name__ == "__main__":
     s = to_vector(sb, ["11"], [1])
     show_state(sb, s)
     show_in_another_spin_coord(sb, s, "x")
+
+    import quimb as qu
+    qu.heisenberg_energy()

@@ -44,59 +44,59 @@ def I(i=0):
     return Oper([["I", [[1, i]]]], ["s"])
 
 
-def SP(i=0):
+def sp(i=0):
     return Oper([["+", [[1, i]]]], ["s"])
 
 
-def SM(i=0):
+def sm(i=0):
     return Oper([["-", [[1, i]]]], ["s"])
 
 
-def X(i=0):
+def x(i=0):
     return Oper([["x", [[1, i]]]], ["s"])
 
 
-def Y(i=0):
+def y(i=0):
     return Oper([["y", [[1, i]]]], ["s"])
 
 
-def Z(i=0):
+def z(i=0):
     return Oper([["z", [[1, i]]]], ["s"])
 
 
-def N(i=0):
+def n(i=0):
     return Oper([["+-", [[1, i, i]]]], ["s"])
 
 
-def NN(i, j):
+def nn(i, j):
     return Oper([["+-+-", [[1, i, i, j, j]]]], ["s"])
 
 
-def ZZ(i, j):
+def zz(i, j):
     return Oper([["zz", [[1, i, j]]]], ["s"])
 
 
-def MP(i, j):
+def mp(i, j):
     return Oper([["+-", [[1, i, j]]]], ["s"])
 
 
-def PM(i, j):
+def pm(i, j):
     return Oper([["-+", [[1, i, j]]]], ["s"])
 
 
-def XX(i, j):
+def xx(i, j):
     return Oper([["xx", [[1, i, j]]]], ["s"])
 
 
-def YY(i, j):
+def yy(i, j):
     return Oper([["yy", [[1, i, j]]]], ["s"])
 
 
-def XY(i, j):
+def xy(i, j):
     return Oper([["xy", [[1, i, j]]]], ["s"])
 
 
-def YX(i, j):
+def yx(i, j):
     return Oper([["yx", [[1, i, j]]]], ["s"])
 
 
@@ -104,35 +104,35 @@ def I_b(i=0):
     return Oper([["I", [[1, i]]]], ["b"])
 
 
-def Bdag(i=0):
+def bdag(i=0):
     return Oper([["+", [[1, i]]]], ["b"])
 
 
-def B(i=0):
+def b(i=0):
     return Oper([["-", [[1, i]]]], ["b"])
 
 
-def N_b(i=0):
+def n_b(i=0):
     return Oper([["n", [[1, i]]]], ["b"])
 
 
-def Z_b(i=0):
+def z_b(i=0):
     return Oper([["z", [[1, i]]]], ["b"])
 
 
-def PM_b(i, j):
+def pm_b(i, j):
     return Oper([["+-", [[1, i, j]]]], ["b"])
 
 
-def MP_b(i, j):
+def mp_b(i, j):
     return Oper([["-+", [[1, i, j]]]], ["b"])
 
 
-def NN_b(i, j):
+def nn_b(i, j):
     return Oper([["nn", [[1, i, j]]]], ["b"])
 
 
-def ZZ_b(i, j):
+def zz_b(i, j):
     return Oper([["zz", [[1, i, j]]]], ["b"])
 
 
@@ -140,51 +140,51 @@ def I_f(i=0):
     return Oper([["I", [[1, i]]]], ["f"])
 
 
-def Fdag(i=0):
+def fdag(i=0):
     return Oper([["+", [[1, i]]]], ["f"])
 
 
-def F(i=0):
+def f(i=0):
     return Oper([["-", [[1, i]]]], ["f"], spinless_fermion_basis_1d(L=i + 1))
 
 
-def X_f(i=0):
+def x_f(i=0):
     return Oper([["x", [[1, i]]]], ["f"])
 
 
-def Y_f(i=0):
+def y_f(i=0):
     return Oper([["y", [[1, i]]]], ["f"])
 
 
-def Z_f(i=0):
+def z_f(i=0):
     return Oper([["z", [[1, i]]]], ["f"])
 
 
-def N_f(i=0):
+def n_f(i=0):
     return Oper([["n", [[1, i]]]], ["f"])
 
 
-def PM_f(i, j):
+def pm_f(i, j):
     return Oper([["+-", [[1, i, j]]]], ["f"])
 
 
-def MP_f(i, j):
+def mp_f(i, j):
     return Oper([["-+", [[1, i, j]]]], ["f"])
 
 
-def NN_f(i, j):
+def nn_f(i, j):
     return Oper([["nn", [[1, i, j]]]], ["f"])
 
 
-def XX_f(i, j):
+def xx_f(i, j):
     return Oper([["xx", [[1, i, j]]]], ["f"])
 
 
-def YY_f(i, j):
+def yy_f(i, j):
     return Oper([["yy", [[1, i, j]]]], ["f"])
 
 
-def ZZ_f(i, j):
+def zz_f(i, j):
     return Oper([["zz", [[1, i, j]]]], ["f"])
 
 
@@ -688,6 +688,187 @@ class Oper:
 ######################################
 
 
+def ham_heis(L, j=1.0, h=0.0, cyclic=False, dtype=_np.float64):
+    try:
+        jx, jy, jz = j
+    except TypeError:
+        jx = jy = jz = j
+    try:
+        hx, hy, hz = h
+    except TypeError:
+        hz = h
+        hx = hy = 0.0
+    Li = 0 if cyclic else 1
+    static = list()
+    if jx != 0:
+        static += [["xx", [[jx, i, (i + 1) % L] for i in range(L - Li)]]]
+    if jy != 0:
+        static += [["yy", [[jy, i, (i + 1) % L] for i in range(L - Li)]]]
+    if jz != 0:
+        static += [["zz", [[jz, i, (i + 1) % L] for i in range(L - Li)]]]
+    if hx != 0:
+        static += [["x", [[hx, i] for i in range(L)]]]
+    if hy != 0:
+        static += [["y", [[hy, i] for i in range(L)]]]
+    if hz != 0:
+        static += [["z", [[hz, i] for i in range(L)]]]
+    return Oper(static, ["s"])
+
+
+def ham_ising(L, jz=1.0, hx=1.0, **ham_opts):
+    """Generate the quantum transverse field ising model hamiltonian. This is a
+    simple alias for :func:`ham_heis` with Z-interactions
+    and an X-field.
+    """
+    return ham_heis(L, j=(0, 0, jz), h=(hx, 0, 0), **ham_opts)
+
+
+def ham_XY(L, jxy=1.0, hz=0.0, **ham_opts):
+    """Generate the quantum transverse field XY model hamiltonian. This is a
+    simple alias for :func:`ham_heis` with
+    X- and Y-interactions and a Z-field.
+    """
+    return ham_heis(L, j=(jxy, jxy, 0), h=(0, 0, hz), **ham_opts)
+
+
+def ham_XXZ(L, delta=1.0, jxy=1.0, **ham_opts):
+    """Generate the XXZ-model hamiltonian. This is a
+    simple alias for :func:`ham_heis` with matched
+    X- and Y-interactions and ``delta`` Z coupling.
+    """
+    return ham_heis(L, j=(jxy, jxy, delta), h=0, **ham_opts)
+
+
+def ham_ZZ_linear(L, theta=1.0):
+    """Generate the XXZ-model hamiltonian. This is a
+    simple alias for :func:`ham_heis` with matched
+    X- and Y-interactions and ``delta`` Z coupling.
+    """
+    if L == 1:
+        raise Exception("single site to generator inhomogenous zz chain")
+    if L == 2:
+        if theta != 0:
+            raise Exception("two sites to generator inhomogenous zz chain")
+        else:
+            static = [["I", [[1, 0]]]]
+    else:
+        static = [
+            ["zz", [[theta * i * 2 / (L - 2) - theta, i, i + 1] for i in range(L - 1)]]
+        ]
+    return Oper(static, ["s"])
+
+def BdG_freefermion(L, jxx=1.0, jyy=1.0, hz=0.0, jxy=0.0, jyx=0.0, cyclic=False, reduce=False):
+    """返回自由费米子对应的自旋模型的 BdG 哈密顿量
+    只有 cyclic 是 False 的时候，才与自旋模型对应。
+    jxy, jyx 为 0 时，BdG 可以化简，reduce 控制是否自动简化。
+    基态能量由 BdG 哈密顿量本征值绝对值求和的一半给出
+    BdG 哈密顿量的每个正本征值都是一个激发能
+
+    Args:
+        L (int): 格点长度
+        jxx (float, optional): Defaults to 1.0.
+        jyy (float, optional): Defaults to 1.0.
+        hz (float, optional): Defaults to 0.0.
+        jxy (float, optional): Defaults to 0.0.
+        jyx (float, optional): Defaults to 0.0.
+        cyclic (bool, optional): 周期性条件 . Defaults to False.
+        reduce (bool, optional): 对于实数系数 返回简化结果 . Defaults to False.
+
+    Returns:
+        sparse_matrix: BdG 哈密顿量
+    """
+    tmp = _np.empty(L)
+    try:
+        tmp.fill(jxx)
+        jxxlist = tmp.copy()
+    except:
+        assert len(jxx) == L
+        jxxlist = jxx
+    try:
+        tmp.fill(jyy)
+        jyylist = tmp.copy()
+    except:
+        assert len(jyy) == L
+        jyylist = jyy
+    try:
+        tmp.fill(hz)
+        hzlist = tmp.copy()
+    except:
+        assert len(hz) == L
+        hzlist = hz
+    try:
+        tmp.fill(jxy)
+        jxylist = tmp.copy()
+    except:
+        assert len(jxy) == L
+        jxylist = jxy
+    try:
+        tmp.fill(jyx)
+        jyxlist = tmp.copy()
+    except:
+        assert len(jyx) == L
+        jyxlist = jyx
+    
+    lbdalist = (jxxlist + jyylist) / 4 + 1j/2 * ( jxylist - jyxlist )
+    gammalist = (jxxlist - jyylist) / 4 + 1j/2 * ( jxylist + jyxlist )
+    hlist = hzlist / 2
+    
+    tag = 0
+    if _np.isreal(lbdalist).all():
+        lbdalist = _np.real(lbdalist)
+        tag += 1 
+    if _np.isreal(gammalist).all():
+        gammalist = _np.real(gammalist)
+        tag += 1
+    
+    # 22 
+    row = list(range(L)) + list(range(0,L-1)) + list(range(1,L))
+    col = list(range(L)) + list(range(1,L)) + list(range(0,L-1))
+    data = list(hlist) + list(lbdalist[:-1]/2) + list(_np.conj(lbdalist[:-1])/2)
+
+    if cyclic:
+        row += [L-1, 0]
+        col += [0, L-1]
+        data += [lbdalist[-1]/2, _np.conj(lbdalist[-1])/2]
+    
+    H22 = _sparse.coo_array((data, (row, col)), shape=(L,L))
+    H22.eliminate_zeros()
+    
+    # 21
+    row = list(range(0,L-1)) + list(range(1,L)) 
+    col = list(range(1,L)) + list(range(0,L-1))
+    data = list(gammalist[:-1]/2) + list(-gammalist[:-1]/2)
+    
+    if cyclic:
+        row += [L-1, 0]
+        col += [0, L-1]
+        data += [gammalist[-1]/2, -gammalist[-1]/2]
+    
+    H21 = _sparse.coo_array((data, (row, col)), shape=(L,L))
+    H21.eliminate_zeros()
+    
+    if tag == 2 and reduce:
+        return (H21 - H22) @  (H21 + H22)
+    else:
+        return _sparse.bmat([[-H22.conj(),-H21.conj()],[H21,H22]])
+    
+def kron(*args):
+    if not args:
+        raise TypeError("Requires at least one input argument")
+    if len(args) == 1 and isinstance(args[0], list):
+        # this is the case when tensor is called on the form:
+        # tensor([q1, q2, q3, ...])
+        qlist = args[0]
+    else:
+        # this is the case when tensor is called on the form:
+        # tensor(q1, q2, q3, ...)
+        qlist = args
+    res = qlist[0]
+    for q in qlist[1:]:
+        res = _np.kron(res, q)
+    return res
+
+
 def rpmethod(match):
     """快速生成哈密顿量，如 xx + yy 就是 x1 x2 + y1 y2
 
@@ -711,7 +892,7 @@ def rpmethod(match):
         "m": "_np.array([[0.,0.],[1.,0.]]),",
         "i": "_np.array([[1.,0.],[0.,1.]]),",
     }
-    res = "_qu.kron("
+    res = "kron("
     for xi in match.group():
         res += dic[xi]
     return res[:-1] + ")"
@@ -722,6 +903,52 @@ def pauli_oper(stri):
 
     new = re.sub("[xyzpmiXYZPMI]+", rpmethod, stri)
     return eval(new)
+
+
+#######################################
+# 常用数据
+######################################
+
+
+def gdenergy_XY_infinite(jx=1.0, jy=1.0, jxy=0.0, jyx=0.0, hz=0.0):
+    from scipy.integrate import quad
+
+    lamb = (jx + jy) / 4 + 1j * (jxy - jyx) / 2
+    gamma = (jx - jy) / 4 + 1j * (jxy + jyx) / 2
+    h = hz / 2
+    return quad(
+        lambda x: -_np.sqrt(
+            (h - _np.real(lamb) * _np.cos(2 * _np.pi * x)) ** 2
+            + (_np.abs(gamma) * _np.sin(2 * _np.pi * x)) ** 2
+        ),
+        0,
+        1,
+    )[0]
+
+
+def gdenergy_heisenberg_pbc_approx(L):
+    """Get the analytic isotropic heisenberg chain ground energy for length L.
+    Useful for testing. Assumes the heisenberg model is defined with spin
+    operators not pauli matrices (overall factor of 2 smaller). Taken from [1].
+
+    [1] Nickel, Bernie. "Scaling corrections to the ground state energy
+    of the spin-½ isotropic anti-ferromagnetic Heisenberg chain." Journal of
+    Physics Communications 1.5 (2017): 055021
+
+    Parameters
+    ----------
+    L : int
+        The length of the chain.
+
+    Returns
+    -------
+    energy : float
+        The ground state energy. 误差在 o( 1/ln^3(L) )
+    """
+    Einf = (0.5 - 2 * _np.log(2)) * L
+    Efinite = _np.pi**2 / (6 * L)
+    correction = 1 + 0.375 / _np.log(L) ** 3
+    return (Einf - Efinite * correction) / 2
 
 
 #######################################
@@ -777,10 +1004,15 @@ def eigh(H, backend="numpy", **kwarg):
 
     #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
     #     return _qu.eigh(quH, **kwarg)
+    try:
+        Hmat = H.toarray()
+    except:
+        assert type(H) == _np.ndarray
+        Hmat = H
     if backend == "scipy":
-        return _la.eigh(H.toarray(), **kwarg)
+        return _la.eigh(Hmat, **kwarg)
     elif backend == "numpy":
-        return _np.linalg.eigh(H.toarray(), **kwarg)
+        return _np.linalg.eigh(Hmat, **kwarg)
     else:
         raise NotImplemented(backend)
 
@@ -838,8 +1070,12 @@ def eigs(H, k, backend="scipy", **kwarg):
     #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
     #     return _qu.eig(quH, k, **kwarg)
     if backend == "scipy":
-        assert _sparse.issparse(H)
-        return _sla.eigs(H, k, **kwarg)
+        if _sparse.issparse(H):
+            return _sla.eigs(H, k, **kwarg)
+        elif type(H) == hamiltonian:
+            return _sla.eigs(H.tocsr(), k, **kwarg)
+        else:
+            raise TypeError("type not understood")
     else:
         raise NotImplemented(backend)
 
@@ -852,8 +1088,12 @@ def eigsh(H, k, backend="scipy", **kwarg):
     #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
     #     return _qu.eigh(quH, k, **kwarg)
     if backend == "scipy":
-        assert _sparse.issparse(H)
-        return _sla.eigsh(H, k, **kwarg)
+        if _sparse.issparse(H):
+            return _sla.eigsh(H, k, **kwarg)
+        elif type(H) == hamiltonian:
+            return H.eigsh(k=k, **kwarg)
+        else:
+            raise TypeError("type not understood")
     else:
         raise NotImplemented(backend)
 
@@ -1402,15 +1642,36 @@ def pertub(E0, U0, V, return_state=False, order=1):
 
 
 if __name__ == "__main__":
-    L = 10
-    Hmat = sum(
-        XX(i, (i + 1) % L) + YY(i, (i + 1) % L) + i * ZZ(i, (i + 1) % L)
-        for i in range(L - 1)
-    )
-    Hmat.basis = spin_basis_1d(L=L)
-    Hmat = Hmat.get_matrix()
-    el, ev = Hmat.eigh()
-    print(el)
+    # L = 10
+    # Hmat = sum(
+    #     xx(i, (i + 1) % L) + yy(i, (i + 1) % L) + i * zz(i, (i + 1) % L)
+    #     for i in range(L - 1)
+    # )
+    # Hmat.basis = spin_basis_1d(L=L)
+    # Hmat = Hmat.get_matrix()
+    # el, ev = Hmat.eigh()
+    # print(el)
 
-    el, ev = eigh(Hmat, backend="quimb")
-    print(el)
+    # el, ev = eigh(Hmat, backend="quimb")
+    # print(el)
+
+    # H = ham_XXZ(L=12, delta=0.1, cyclic=True)
+    # H.show_oper()
+    # H.basis = spin_basis_1d(L=12, Nup=6)
+    # H1 = H.get_matrix()
+    # print(H1.shape)
+
+    # H = ham_ZZ_linear(L=2, theta=0)
+    # H.show_oper()
+
+    # import quimb as qu
+    # qu.heisenberg_energy()
+    L = 4
+    basis = spin_basis_1d(L=L, pauli=-1)
+    H = ham_XY(L=L, cyclic=True)
+    H = H.get_matrix(basis=basis)
+    print(eigsh(H, k=1, return_eigenvectors=False)[0])
+    print(gdenergy_XY_infinite(L=L))
+    
+    import quimb as qu
+    print(qu.heisenberg_energy(L=L))

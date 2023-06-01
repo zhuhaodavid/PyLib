@@ -1249,6 +1249,9 @@ def BdG_gd_state(ev, L):
             ini = output / nm
     return ini
 
+def martix_O_obs(psi, O):
+    return psi.transpose().conj() @ O.dot(psi)
+
 #################################################
 #  生成态
 #################################################

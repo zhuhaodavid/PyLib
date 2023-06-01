@@ -1,25 +1,3 @@
-"""
-EDtools
-------------
-快速的 ED 工具
-
-LevelStatics
------------
-- 能谱统计
-
-NumTools
------------
-- 产生随机矩阵
-
-Models
-----------
-自旋模型的求解
-
-PlotTools
-----------
-画图的函数
-"""
-
 import numpy as np
 np.set_printoptions(linewidth=np.inf, suppress=True)
 
@@ -50,8 +28,3 @@ from PyLib.PlotTools import realtime_plot, animate_fig
 from PyLib.RandomTools import rd_simple_mat, rd_sym_mat, rd_orth_mat, rd_singular_mat
 from PyLib.RandomTools import rd_simple_mat_complex, rd_normal_mat_complex
 from PyLib.RandomTools import rd_herm_mat, rd_unitary_mat, rd_noninv_mat, rd_realeig_mat
-
-# import PyLib.BasicTools as bt
-# import PyLib.PlotTools as pt
-# import PyLib.RandomTools as rt
-

@@ -7,6 +7,7 @@ def set_axis(ax, xlim, ylim, xlabel, ylabel):
     ax.set_ylim(ylim)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
+    _plt.tight_layout()
     ###############################################################
     # 画布、画框
     ###############################################################
@@ -84,7 +85,6 @@ def ini_mpl(config=None):
     from IPython.display import set_matplotlib_formats
 
     set_matplotlib_formats("svg")
-    _plt.tight_layout()
     
     defaultconfig = {
         "pdf.fonttype": 42,

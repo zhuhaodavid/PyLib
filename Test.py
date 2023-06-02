@@ -384,6 +384,3 @@ if __name__ == "__main__":
     s = to_vector(sb, ["11"], [1])
     show_state(sb, s)
     show_in_another_spin_coord(sb, s, "x")
-
-    import quimb as qu
-    qu.heisenberg_energy()

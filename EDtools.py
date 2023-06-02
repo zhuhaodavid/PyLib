@@ -489,7 +489,7 @@ class Oper:
         check_symm=False,
         check_herm=False,
         check_pcon=False,
-    ):
+    ) -> hamiltonian:
         """生成算符的矩阵表示
         方法 1 的优先级高于 方法 2
 

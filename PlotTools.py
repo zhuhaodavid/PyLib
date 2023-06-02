@@ -11,9 +11,8 @@ def set_axis(ax, xlim, ylim, xlabel, ylabel):
     ###############################################################
     # 画布、画框
     ###############################################################
-    # from matplotlib.figure import Figure
-    # fig = plt.figure(figsize=(6, 4)) # type:figure.Figure
-    # ax = fig.add_subplot(1, 1, 1)  # type:axes._axes.Axes
+    # fig = plt.figure(figsize=(6, 4)) # type:Figure
+    # ax = fig.add_subplot(1, 1, 1)  # type:Axes
 
     # ax, ax2 = fig.get_axes()  # 从画布获取画框
     # [[x0, y0], [x1, y1]] = ax.get_position().get_points()  # 获取画框位置
@@ -89,8 +88,8 @@ def ini_mpl(config=None):
     defaultconfig = {
         "pdf.fonttype": 42,
         "figure.dpi": 70,
-        "font.size": 16,
-        "axes.labelsize": 16,
+        "font.size": 14,
+        "axes.labelsize": 14,
         "font.family": 'sans-serif', # 'sans-serif', "Times New Roman"
         "mathtext.fontset": "stix",  # 'dejavusans','dejavuserif', 'cm', 'stix','stixsans' or 'custom'
         "font.serif": ["SimSun"],

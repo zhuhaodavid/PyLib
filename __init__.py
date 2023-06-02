@@ -4,6 +4,8 @@ np.set_printoptions(linewidth=np.inf, suppress=True)
 import scipy.linalg as la
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.figure import Figure
+from matplotlib.axes._axes import Axes
 
 from quspin.basis import spin_basis_1d, boson_basis_1d, spinless_fermion_basis_1d, \
     tensor_basis  # Hilbert space spin basis

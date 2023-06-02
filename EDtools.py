@@ -688,7 +688,7 @@ class Oper:
 ######################################
 
 
-def ham_heis(L, j=1.0, h=0.0, cyclic=False, dtype=_np.float64):
+def ham_heis(L, j=1.0, h=0.0, cyclic=False):
     try:
         jx, jy, jz = j
     except TypeError:
@@ -729,6 +729,22 @@ def ham_XY(L, jxy=1.0, hz=0.0, **ham_opts):
     X- and Y-interactions and a Z-field.
     """
     return ham_heis(L, j=(jxy, jxy, 0), h=(0, 0, hz), **ham_opts)
+
+
+def ham_Z(L, hz=1.0, **ham_opts):
+    """Generate the quantum transverse field XY model hamiltonian. This is a
+    simple alias for :func:`ham_heis` with
+    X- and Y-interactions and a Z-field.
+    """
+    return ham_heis(L, j=(0, 0, 0), h=(0, 0, hz), **ham_opts)
+
+
+def ham_ZZ(L, jzz=1.0, **ham_opts):
+    """Generate the quantum transverse field XY model hamiltonian. This is a
+    simple alias for :func:`ham_heis` with
+    X- and Y-interactions and a Z-field.
+    """
+    return ham_heis(L, j=(0, 0, jzz), h=(0, 0, 0), **ham_opts)
 
 
 def ham_XXZ(L, delta=1.0, jxy=1.0, **ham_opts):

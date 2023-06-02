@@ -16,7 +16,7 @@ from PyLib.EDtools import eig, eigh, eigvals, eigvalsh, eigs, eigsh
 from PyLib.EDtools import show_state, show_basis, show_eig, to_vector, show_in_another_spin_coord
 from PyLib.EDtools import ham_heis, ham_ising, ham_XXZ, ham_XY, ham_ZZ, ham_Z, ham_ZZ_linear, ham_BdG_freefermion
 from PyLib.EDtools import BdG_clist, BdG_gd_state, gdenergy_XY_infinite, gdenergy_heisenberg_pbc_approx, gdenergy_XY, energies_XY
-from PyLib.EDtools import kron, pauli_oper, pertub, martix_O_obs
+from PyLib.EDtools import Oper, kron, pauli_oper, pertub, martix_O_obs
 
 from PyLib.Basicfun import save_mat, save_hdf5, load_hdf5
 from PyLib.Basicfun import Gauss_fun, log_Gauss_fun

@@ -1122,7 +1122,7 @@ def svd(H, backend="numpy", **kwarg):
         raise NotImplemented(backend)
 
 
-def eigs(H, k, backend="scipy", **kwarg):
+def eigs(H, k, backend="scipy", which='SA', return_eigenvectors=True, **kwarg):
     """一般矩阵 lanczos"""
     # if backend == "quimb":
     #     import quimb as _qu
@@ -1131,16 +1131,16 @@ def eigs(H, k, backend="scipy", **kwarg):
     #     return _qu.eig(quH, k, **kwarg)
     if backend == "scipy":
         if _sparse.issparse(H):
-            return _sla.eigs(H, k, **kwarg)
+            return _sla.eigs(H, k, which='SA', return_eigenvectors=True, **kwarg)
         elif type(H) == hamiltonian:
-            return _sla.eigs(H.tocsr(), k, **kwarg)
+            return _sla.eigs(H.tocsr(), k, which='SA', return_eigenvectors=True, **kwarg)
         else:
             raise TypeError("type not understood")
     else:
         raise NotImplemented(backend)
 
 
-def eigsh(H, k, backend="scipy", **kwarg):
+def eigsh(H, k, backend="scipy", which='SA', return_eigenvectors=True, **kwarg):
     """厄密矩阵 lanczos"""
     # if backend == "quimb":
     #     import quimb as _qu
@@ -1149,9 +1149,9 @@ def eigsh(H, k, backend="scipy", **kwarg):
     #     return _qu.eigh(quH, k, **kwarg)
     if backend == "scipy":
         if _sparse.issparse(H):
-            return _sla.eigsh(H, k, **kwarg)
+            return _sla.eigsh(H, k, which='SA', return_eigenvectors=return_eigenvectors, **kwarg)
         elif type(H) == hamiltonian:
-            return H.eigsh(k=k, **kwarg)
+            return H.eigsh(k=k, which='SA', return_eigenvectors=return_eigenvectors, **kwarg)
         else:
             raise TypeError("type not understood")
     else:

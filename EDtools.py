@@ -1042,118 +1042,166 @@ def tocoolist(sparmatrix):
 #     return cvt2csr(H)
 
 
-def eig(H, backend="numpy", **kwarg):
-    """一般矩阵本征值分解"""
-    # if backend == "quimb":
-    #     import quimb as _qu
-
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.eig(quH, **kwarg)
+def eig(H, backend="scipy"):
+    """一般矩阵本征值分解
+    速度没有明显区别"""
+    if type(H) not in [list, _np.ndarray]:
+        try:
+            Hmat = H.toarray()
+        except:
+            raise TypeError("type not understood")
     if backend == "scipy":
-        return _la.eig(H.toarray(), **kwarg)
+        return _la.eig(Hmat, check_finite=False)
     elif backend == "numpy":
-        return _np.linalg.eig(H.toarray(), **kwarg)
+        return _np.linalg.eig(Hmat)
     else:
         raise NotImplemented(backend)
 
 
-def eigh(H, backend="numpy", **kwarg):
-    """厄密矩阵本征值分解"""
-    # if backend == "quimb":
-    #     import quimb as _qu
-
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.eigh(quH, **kwarg)
-    try:
-        Hmat = H.toarray()
-    except:
-        assert type(H) == _np.ndarray
-        Hmat = H
+def eigh(H, backend="scipy", driver="evd"):
+    """厄密矩阵本征值分解， 
+     scipy 的 driver 有"evd", "evr", "evx
+     但 evd 速度最快，尤其当 H 为实对称时
+     evd scipy 和默认的 numpy 速度差不多"""
+    if type(H) not in [list, _np.ndarray]:
+        try:
+            Hmat = H.toarray()
+        except:
+            raise TypeError("type not understood")
     if backend == "scipy":
-        return _la.eigh(Hmat, **kwarg)
+        return _la.eigh(Hmat, check_finite=False, driver=driver)
     elif backend == "numpy":
-        return _np.linalg.eigh(Hmat, **kwarg)
+        return _np.linalg.eigh(Hmat)
+    elif backend == "lapack":
+        # ssyevd 只能处理实对称矩阵，并且误差较大
+        return _la.lapack.ssyevd(Hmat)
     else:
         raise NotImplemented(backend)
 
 
-def eigvals(H, backend="numpy", **kwarg):
-    """一般矩阵本征值分解，但只求本征值"""
-    # if backend == "quimb":
-    #     import quimb as _qu
+def eighbetween(H, subset_by_value=None, subset_by_index=None, value_number=None, driver="evr", return_eigenvectors=True):
+    """ 
+    计算 H 中的部分谱
+    可以指定 index 范围
+        如 subset_by_index = (10, 500) 指第 10 个到第 499 个本征态
+    可以指定 value 范围
+        如 subset_by_value = (-1, 1) 指本征值在 -1 到 1 之间的所有本征态
+    可以指定从 value 开始某个范围的本征态 
+        如 value_number = ("up", 0, 3) 指大于 0 的三个最小本征态
+        如 value_number = ("down", 0, 3) 指小于 0 的三个最小本征态
+        如 value_number = ("between", 0, 6) 指 0 附近的 6 个本征态
+    前两者是用 eigh 计算，需要稠密矩阵，
+    最后是用 eigsh 计算，但要计算矩阵的逆算符
+    最后一个需要
+    """
+    if (subset_by_index!=None and subset_by_value==None and value_number==None) or (subset_by_index==None and subset_by_value !=None and value_number==None):
+        if type(H) not in [list, _np.ndarray]:
+            try:
+                Hmat = H.toarray()
+            except:
+                raise TypeError("type not understood")
+        return _la.eigh(Hmat, subset_by_value=subset_by_value, subset_by_index=subset_by_index, driver=driver, eigvals_only= not return_eigenvectors)
+    elif subset_by_index==None and subset_by_index==None and value_number!=None:
+        direct, value, k = value_number
+        if _sparse.issparse(H) or type(H) in [_np.ndarray, _sla.LinearOperator]:
+            Hmat = H
+        else:
+            try:
+                Hmat = H.tocsr()
+            except:
+                raise TypeError("type not understood")
+        if direct == "up":
+            return _sla.eigsh(Hmat, k, sigma=value, which="LA", return_eigenvectors=return_eigenvectors)
+        elif direct == "down":
+            return _sla.eigsh(Hmat, k, sigma=value, which="SA", return_eigenvectors=return_eigenvectors)
+        elif direct == "between":
+            assert k > 1
+            return _sla.eigsh(Hmat, k, sigma=value, which="BE", return_eigenvectors=return_eigenvectors)
+        else:
+            raise ValueError("direction not understood")
 
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.eigvals(quH, **kwarg)
+
+def eigvals(H, backend="scipy"):
+    """一般矩阵本征值分解，但只求本征值
+    速度没有明显区别"""
+    if type(H) not in [list, _np.ndarray]:
+        try:
+            Hmat = H.toarray()
+        except:
+            raise TypeError("type not understood")
     if backend == "scipy":
-        return _la.eigvals(H.toarray(), **kwarg)
+        return _la.eigvals(Hmat, check_finite=False)
     elif backend == "numpy":
-        return _np.linalg.eigvals(H.toarray(), **kwarg)
+        return _np.linalg.eigvals(Hmat)
     else:
         raise NotImplemented(backend)
 
 
-def eigvalsh(H, backend="numpy", **kwarg):
-    """厄密矩阵本征值分解，但只求本征值"""
-    # if backend == "quimb":
-    #     import quimb as _qu
-
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.eigvalsh(quH, **kwarg)
+def eigvalsh(H, backend="scipy", driver="evd"):
+    """厄密矩阵本征值分解，但只求本征值
+    scipy 的 driver 有"evd", "evr", "evx
+     但 evd 速度最快，尤其当 H 为实对称时
+     evd scipy 和默认的 numpy 速度差不多"""
+    if type(H) not in [list, _np.ndarray]:
+        try:
+            Hmat = H.toarray()
+        except:
+            raise TypeError("type not understood")
     if backend == "scipy":
-        return _la.eigvalsh(H.toarray(), **kwarg)
+        return _la.eigvalsh(Hmat, driver=driver, check_finite=False)
     elif backend == "numpy":
-        return _np.linalg.eigvalsh(H.toarray(), **kwarg)
+        return _np.linalg.eigvalsh(Hmat)
+    elif backend == "lapack":
+        # ssyevd 只能处理实对称矩阵，并且误差较大
+        return _la.lapack.ssyevd(Hmat, compute_v=0)
     else:
         raise NotImplemented(backend)
 
 
-def svd(H, backend="numpy", **kwarg):
-    """一般矩阵奇异值分解"""
-    # if backend == "quimb":
-    #     import quimb as _qu
-
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.svd(quH, **kwarg)
+def svd(H, backend="numpy", lapack_driver="gesdd", full_matrices=False, compute_uv=True):
+    """一般矩阵奇异值分解
+    虽然不知道为什么，但 numpy 的 svd 比 scipy 的快的一点点"""
+    if type(H) not in [list, _np.ndarray]:
+        try:
+            Hmat = H.toarray()
+        except:
+            raise TypeError("type not understood")
     if backend == "scipy":
-        return _la.svd(H.toarray(), **kwarg)
+        return _la.svd(Hmat, lapack_driver=lapack_driver, full_matrices=full_matrices, compute_uv=compute_uv)
     elif backend == "numpy":
-        return _np.linalg.svd(H.toarray(), **kwarg)
+        return _np.linalg.svd(Hmat, full_matrices=full_matrices, compute_uv=compute_uv)
     else:
         raise NotImplemented(backend)
 
 
 def eigs(H, k, backend="scipy", which='SA', return_eigenvectors=True, **kwarg):
     """一般矩阵 lanczos"""
-    # if backend == "quimb":
-    #     import quimb as _qu
-
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.eig(quH, k, **kwarg)
-    if backend == "scipy":
-        if _sparse.issparse(H):
-            return _sla.eigs(H, k, which='SA', return_eigenvectors=True, **kwarg)
-        elif type(H) == hamiltonian:
-            return _sla.eigs(H.tocsr(), k, which='SA', return_eigenvectors=True, **kwarg)
-        else:
+    if _sparse.issparse(H) or type(H) in [_np.ndarray, _sla.LinearOperator]:
+        Hmat = H
+    else:
+        try:
+            Hmat = H.tocsr()
+        except:
             raise TypeError("type not understood")
+        
+    if backend == "scipy":
+        return _sla.eigs(Hmat, k, which=which, return_eigenvectors=return_eigenvectors, **kwarg)
     else:
         raise NotImplemented(backend)
 
 
 def eigsh(H, k, backend="scipy", which='SA', return_eigenvectors=True, **kwarg):
     """厄密矩阵 lanczos"""
-    # if backend == "quimb":
-    #     import quimb as _qu
-
-    #     quH = H if type(H) == _qu.core.qarray else convert2qu(H)
-    #     return _qu.eigh(quH, k, **kwarg)
-    if backend == "scipy":
-        if _sparse.issparse(H):
-            return _sla.eigsh(H, k, which='SA', return_eigenvectors=return_eigenvectors, **kwarg)
-        elif type(H) == hamiltonian:
-            return H.eigsh(k=k, which='SA', return_eigenvectors=return_eigenvectors, **kwarg)
-        else:
+    if _sparse.issparse(H) or type(H) in [_np.ndarray, _sla.LinearOperator]:
+        Hmat = H
+    else:
+        try:
+            Hmat = H.tocsr()
+        except:
             raise TypeError("type not understood")
+        
+    if backend == "scipy":
+        return _sla.eigsh(Hmat, k, which=which, return_eigenvectors=return_eigenvectors, **kwarg)
     else:
         raise NotImplemented(backend)
 

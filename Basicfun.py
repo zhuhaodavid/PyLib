@@ -35,18 +35,18 @@ def save_hdf5(path, data):
         file.create_dataset("data", data=data)
 
 
-def load_hdf5(path, int=None):
+def load_hdf5(path, ini=None):
     # read data to HDF5
     import h5py
     if path[-3:] != ".h5":
         path += ".h5"
-    if int is None:
+    if ini is None:
         with h5py.File(path, "r") as file:
-            int = file["data"][()]  # returns as a numpy array
+            ini = file["data"][:]  # returns as a numpy array
     else:
         with h5py.File(path, "r") as file:
-            file["data"].read_direct(int)
-    return int
+            file["data"].read_direct(ini)
+    return ini
 
 
 def martix_O_obs(psi, O):

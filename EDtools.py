@@ -1045,11 +1045,14 @@ def tocoolist(sparmatrix):
 def eig(H, backend="scipy"):
     """一般矩阵本征值分解
     速度没有明显区别"""
-    if type(H) not in [list, _np.ndarray]:
+    if type(H) in [list, _np.ndarray]:
+        Hmat = H
+    else:
         try:
             Hmat = H.toarray()
         except:
             raise TypeError("type not understood")
+    
     if backend == "scipy":
         return _la.eig(Hmat, check_finite=False)
     elif backend == "numpy":
@@ -1063,11 +1066,14 @@ def eigh(H, backend="scipy", driver="evd"):
      scipy 的 driver 有"evd", "evr", "evx
      但 evd 速度最快，尤其当 H 为实对称时
      evd scipy 和默认的 numpy 速度差不多"""
-    if type(H) not in [list, _np.ndarray]:
+    if type(H) in [list, _np.ndarray]:
+        Hmat = H
+    else:
         try:
             Hmat = H.toarray()
         except:
             raise TypeError("type not understood")
+    
     if backend == "scipy":
         return _la.eigh(Hmat, check_finite=False, driver=driver)
     elif backend == "numpy":
@@ -1095,11 +1101,14 @@ def eighbetween(H, subset_by_value=None, subset_by_index=None, value_number=None
     最后一个需要
     """
     if (subset_by_index!=None and subset_by_value==None and value_number==None) or (subset_by_index==None and subset_by_value !=None and value_number==None):
-        if type(H) not in [list, _np.ndarray]:
+        if type(H) in [list, _np.ndarray]:
+            Hmat = H
+        else:
             try:
                 Hmat = H.toarray()
             except:
                 raise TypeError("type not understood")
+        
         return _la.eigh(Hmat, subset_by_value=subset_by_value, subset_by_index=subset_by_index, driver=driver, eigvals_only= not return_eigenvectors)
     elif subset_by_index==None and subset_by_index==None and value_number!=None:
         direct, value, k = value_number
@@ -1124,11 +1133,14 @@ def eighbetween(H, subset_by_value=None, subset_by_index=None, value_number=None
 def eigvals(H, backend="scipy"):
     """一般矩阵本征值分解，但只求本征值
     速度没有明显区别"""
-    if type(H) not in [list, _np.ndarray]:
+    if type(H) in [list, _np.ndarray]:
+        Hmat = H
+    else:
         try:
             Hmat = H.toarray()
         except:
             raise TypeError("type not understood")
+    
     if backend == "scipy":
         return _la.eigvals(Hmat, check_finite=False)
     elif backend == "numpy":
@@ -1142,11 +1154,14 @@ def eigvalsh(H, backend="scipy", driver="evd"):
     scipy 的 driver 有"evd", "evr", "evx
      但 evd 速度最快，尤其当 H 为实对称时
      evd scipy 和默认的 numpy 速度差不多"""
-    if type(H) not in [list, _np.ndarray]:
+    if type(H) in [list, _np.ndarray]:
+        Hmat = H
+    else:
         try:
             Hmat = H.toarray()
         except:
             raise TypeError("type not understood")
+    
     if backend == "scipy":
         return _la.eigvalsh(Hmat, driver=driver, check_finite=False)
     elif backend == "numpy":
@@ -1161,11 +1176,14 @@ def eigvalsh(H, backend="scipy", driver="evd"):
 def svd(H, backend="numpy", lapack_driver="gesdd", full_matrices=False, compute_uv=True):
     """一般矩阵奇异值分解
     虽然不知道为什么，但 numpy 的 svd 比 scipy 的快的一点点"""
-    if type(H) not in [list, _np.ndarray]:
+    if type(H) in [list, _np.ndarray]:
+        Hmat = H
+    else:
         try:
             Hmat = H.toarray()
         except:
             raise TypeError("type not understood")
+    
     if backend == "scipy":
         return _la.svd(Hmat, lapack_driver=lapack_driver, full_matrices=full_matrices, compute_uv=compute_uv)
     elif backend == "numpy":

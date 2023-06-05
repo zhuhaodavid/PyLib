@@ -1064,7 +1064,7 @@ def eig(H, backend="scipy"):
 def eigh(H, backend="scipy", driver="evd"):
     """厄密矩阵本征值分解， 
      scipy 的 driver 有"evd", "evr", "evx
-     但 evd 速度最快，尤其当 H 为实对称时
+     当 H 为实对称时，evd 速度最快
      evd scipy 和默认的 numpy 速度差不多"""
     if type(H) in [list, _np.ndarray]:
         Hmat = H

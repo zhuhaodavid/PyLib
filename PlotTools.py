@@ -79,30 +79,52 @@ def set_axis(ax, xlim, ylim, xlabel, ylabel):
 
 
 
-def ini_mpl(config=None):
+def ini_mpl(config=None, reset=False, svg=True):
     # https://matplotlib.org/stable/tutorials/introductory/customizing.html
-    from IPython.display import set_matplotlib_formats
-
-    set_matplotlib_formats("svg")
-    
-    defaultconfig = {
-        "pdf.fonttype": 42,
-        "figure.dpi": 70,
-        "font.size": 14,
-        "axes.labelsize": 14,
-        "font.family": 'sans-serif', # 'sans-serif', "Times New Roman"
-        "mathtext.fontset": "stix",  # 'dejavusans','dejavuserif', 'cm', 'stix','stixsans' or 'custom'
-        "font.serif": ["SimSun"],
-        # "figure.autolayout": True,
-        "xtick.direction": "in",  # x tick 方向
-        "ytick.direction": "in",  # y tick 方向
-        # grid
-        "axes.grid": "False",
-        "grid.alpha": 0.4,  # 透明度
-        "grid.linewidth": 1.0,  # 粗细
-        # "svg.image_inline": True
-    }
-    _plt.rcParams.update(defaultconfig)
+    if svg:
+        from IPython.display import set_matplotlib_formats
+        set_matplotlib_formats("svg")
+    else:
+        from IPython.display import set_matplotlib_formats
+        set_matplotlib_formats("png")
+    if config is None and reset is False:
+        defaultconfig = {
+            "pdf.fonttype": 42,
+            "figure.dpi": 150,
+            "font.size": 14,
+            "axes.labelsize": 14,
+            "font.family": 'Times New Roman', # 'sans-serif', "Times New Roman"
+            "mathtext.fontset": "stix",  # 'dejavusans','dejavuserif', 'cm', 'stix','stixsans' or 'custom'
+            "font.serif": ["SimSun"],
+            # "figure.autolayout": True,
+            "xtick.direction": "in",  # x tick 方向
+            "ytick.direction": "in",  # y tick 方向
+            # grid
+            "axes.grid": "False",
+            "grid.alpha": 0.4,  # 透明度
+            "grid.linewidth": 1.0,  # 粗细
+            # "svg.image_inline": True
+        }
+        _plt.rcParams.update(defaultconfig)
+    if reset:
+        config = {
+            "pdf.fonttype": 3,
+            "figure.dpi": 100,
+            "font.size": 10.0,
+            "axes.labelsize": "medium",
+            "font.family": 'sans-serif', # 'sans-serif', "Times New Roman"
+            "mathtext.fontset": "dejavusans",  # 'dejavusans','dejavuserif', 'cm', 'stix','stixsans' or 'custom'
+            "font.serif": ["DejaVu Serif", "Bitstream Vera Serif", "Computer Modern Roman", "New Century Schoolbook", "Century Schoolbook L", "Utopia", "ITC Bookman", "Bookman, Nimbus Roman No9 L", "Times New Roman", "Times, Palatino", "Charter", "serif"],
+            # "figure.autolayout": True,
+            "xtick.direction": "out",  # x tick 方向
+            "ytick.direction": "out",  # y tick 方向
+            # grid
+            "axes.grid": "False",
+            "grid.alpha": 1.0,  # 透明度
+            "grid.linewidth": 0.8,  # 粗细
+            # "svg.image_inline": True
+        }
+        _plt.rcParams.update(config)
     if config is not None:
         _plt.rcParams.update(config)
 

@@ -30,7 +30,21 @@ def save_mat(path, H):
 
 def save_hdf5(path, data):
     # save data to HDF5
+    """ 保存成有结构的
     import h5py
+    f = h5py.File("test.h5","a")
+    f.create_group("test") # 创建一个 group
+    g = f["test"]  # 记录 group 为一个变量，如果不存在该 "group" 会报错
+    g.name  # 查看当前的所在文件目录位置
+    list(g.keys()) # 查看当前的目录下的数据
+    g["data"] = data # 将 data 储存进 "/test/data" 中，如果存在该数据会报错
+    g["data"][1:2,:]  # 调用 "data" 中储存数据的第 1 到 2 行
+    del g["data"]  # 删除 "/test/data" 中的数据
+    f.close()  # 关闭文件
+    """
+    import h5py
+    if path[-3:] != ".h5" and path[-5:] != ".hdf5":
+        path += ".h5"
     with h5py.File(path+".h5", "w") as file:
         file.create_dataset("data", data=data)
 
@@ -38,7 +52,7 @@ def save_hdf5(path, data):
 def load_hdf5(path, ini=None):
     # read data to HDF5
     import h5py
-    if path[-3:] != ".h5":
+    if path[-3:] != ".h5" and path[-5:] != ".hdf5":
         path += ".h5"
     if ini is None:
         with h5py.File(path, "r") as file:

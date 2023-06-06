@@ -2,6 +2,7 @@ import numpy as np
 np.set_printoptions(linewidth=np.inf, suppress=True)
 
 import scipy.linalg as la
+from scipy import sparse
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.figure import Figure

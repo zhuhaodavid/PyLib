@@ -1763,8 +1763,6 @@ def pertub(E0, U0, V, return_state=False, order=1):
     Raises:
         Exception: 只能计算一阶和二阶微扰，高阶微扰需要考虑费曼图方法
 
-    Returns:
-        _type_: _description_
     """
     # 一阶微扰
     v_tilde = V.matrix_ele(U0, U0)  # V 在 H0 下的矩阵元

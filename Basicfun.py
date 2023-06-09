@@ -1,22 +1,33 @@
 import scipy.io as sio
 import numpy as _np
-import torch as _tc
+import os
+# import torch as _tc
 
+def clear(name):
+    del(name)
+    import gc
+    gc.collect()
 
-def choose_device(n=0):
-    """判断机器中的 cuda 是否可用"""
-    if n == "cpu":
-        return "cpu"
-    else:
-        if _tc.cuda.is_available():
-            if n is None:
-                return _tc.device("cuda:0")
-            elif type(n) is int:
-                return _tc.device("cuda:" + str(n))
-            else:
-                return _tc.device("cuda" + str(n)[4:])
-        else:
-            return _tc.device("cpu")
+def creat_if_not_exist(parentpath, childepath):
+    wholepath = parentpath + childepath
+    if not os.path.exists(wholepath):
+        os.makedirs(wholepath)
+    return wholepath
+
+# def choose_device(n=0):
+#     """判断机器中的 cuda 是否可用"""
+#     if n == "cpu":
+#         return "cpu"
+#     else:
+#         if _tc.cuda.is_available():
+#             if n is None:
+#                 return _tc.device("cuda:0")
+#             elif type(n) is int:
+#                 return _tc.device("cuda:" + str(n))
+#             else:
+#                 return _tc.device("cuda" + str(n)[4:])
+#         else:
+#             return _tc.device("cpu")
 
 
 def save_mat(path, H):
